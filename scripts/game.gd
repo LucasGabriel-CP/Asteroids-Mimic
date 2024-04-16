@@ -8,6 +8,7 @@ extends Node2D
 @onready var game_over_screen = $UI/GameOverScreen
 @onready var player_respawn_area = $PlayerRespawn/PlayerSpawnArea
 @onready var spawn_timer = $Timer
+@onready var global_vars = get_node('/root/GlobalVars')
 
 var asteroid_scene = preload("res://Scenes/asteroid.tscn")
 var side := 0
@@ -68,6 +69,8 @@ func _on_player_died():
 	if !lives:
 		$LoseSound.play()
 		await get_tree().create_timer(2).timeout
+		global_vars.highscore = score
+		game_over_screen.highscore = global_vars.highscore
 		game_over_screen.visible = true
 	else:
 		$LiveSound.play()
@@ -88,4 +91,4 @@ func _on_timer_timeout():
 		3:
 			spawn_asteroid(Vector2(1380.0, randf_range(1.0, 720.0)), Asteroid.AsteroidSize.LARGE)
 	side = (side + 1) % 4
-	spawn_timer.set_wait_time(max(1, 7 * ((9000.0 - min(9000.0, score))/400.0)))
+	spawn_timer.set_wait_time(max(1, 10 * (1 - ((min(9000.0, score))/10000.0))))

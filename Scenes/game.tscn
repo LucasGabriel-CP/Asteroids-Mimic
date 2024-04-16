@@ -1,7 +1,8 @@
-[gd_scene load_steps=14 format=3 uid="uid://l4a50c1x5asr"]
+[gd_scene load_steps=15 format=3 uid="uid://l4a50c1x5asr"]
 
 [ext_resource type="PackedScene" uid="uid://o68rxcdnad53" path="res://Scenes/player.tscn" id="1_3gptx"]
 [ext_resource type="Script" path="res://scripts/game.gd" id="1_dbrir"]
+[ext_resource type="Script" path="res://Scenes/global.gd" id="1_p2inc"]
 [ext_resource type="PackedScene" uid="uid://bku125ctnn5an" path="res://Scenes/hud.tscn" id="2_rl1oc"]
 [ext_resource type="PackedScene" uid="uid://bnpyb46gtf517" path="res://Scenes/game_over_screen.tscn" id="3_3b7kv"]
 [ext_resource type="PackedScene" uid="uid://dqtht3i4kivcn" path="res://Scenes/asteroid.tscn" id="3_j0x41"]
@@ -42,18 +43,21 @@ gravity = Vector3(0, 0, 0)
 scale_min = 5.0
 scale_max = 5.0
 
-[node name="Game" type="Node2D"]
+[node name="Global" type="Node"]
+script = ExtResource("1_p2inc")
+
+[node name="Game" type="Node2D" parent="."]
 script = ExtResource("1_dbrir")
 
-[node name="UI" type="CanvasLayer" parent="."]
+[node name="UI" type="CanvasLayer" parent="Game"]
 
-[node name="HUD" parent="UI" instance=ExtResource("2_rl1oc")]
+[node name="HUD" parent="Game/UI" instance=ExtResource("2_rl1oc")]
 
-[node name="GameOverScreen" parent="UI" instance=ExtResource("3_3b7kv")]
+[node name="GameOverScreen" parent="Game/UI" instance=ExtResource("3_3b7kv")]
 
-[node name="BackgroundStarField" type="Node2D" parent="."]
+[node name="BackgroundStarField" type="Node2D" parent="Game"]
 
-[node name="StarFieldBack" type="GPUParticles2D" parent="BackgroundStarField"]
+[node name="StarFieldBack" type="GPUParticles2D" parent="Game/BackgroundStarField"]
 z_index = -100
 position = Vector2(1350, 360)
 amount = 1000
@@ -61,7 +65,7 @@ process_material = SubResource("ParticleProcessMaterial_a6v1u")
 lifetime = 240.0
 preprocess = 300.0
 
-[node name="StarFieldMiddle" type="GPUParticles2D" parent="BackgroundStarField"]
+[node name="StarFieldMiddle" type="GPUParticles2D" parent="Game/BackgroundStarField"]
 z_index = -100
 position = Vector2(1350, 360)
 amount = 1000
@@ -69,7 +73,7 @@ process_material = SubResource("ParticleProcessMaterial_qjeix")
 lifetime = 240.0
 preprocess = 300.0
 
-[node name="StarFieldFront" type="GPUParticles2D" parent="BackgroundStarField"]
+[node name="StarFieldFront" type="GPUParticles2D" parent="Game/BackgroundStarField"]
 z_index = -100
 position = Vector2(1350, 360)
 amount = 1000
@@ -77,44 +81,44 @@ process_material = SubResource("ParticleProcessMaterial_g5wxo")
 lifetime = 240.0
 preprocess = 300.0
 
-[node name="Player" parent="." instance=ExtResource("1_3gptx")]
+[node name="Player" parent="Game" instance=ExtResource("1_3gptx")]
 position = Vector2(640, 360)
 
-[node name="Asteroids" type="Node" parent="."]
+[node name="Asteroids" type="Node" parent="Game"]
 
-[node name="Asteroid" parent="Asteroids" instance=ExtResource("3_j0x41")]
+[node name="Asteroid" parent="Game/Asteroids" instance=ExtResource("3_j0x41")]
 position = Vector2(1084, 184)
 size = 0
 
-[node name="Asteroid2" parent="Asteroids" instance=ExtResource("3_j0x41")]
+[node name="Asteroid2" parent="Game/Asteroids" instance=ExtResource("3_j0x41")]
 position = Vector2(948, 577)
 size = 0
 
-[node name="Asteroid3" parent="Asteroids" instance=ExtResource("3_j0x41")]
+[node name="Asteroid3" parent="Game/Asteroids" instance=ExtResource("3_j0x41")]
 position = Vector2(182, 553)
 size = 0
 
-[node name="Lasers" type="Node" parent="."]
+[node name="Lasers" type="Node" parent="Game"]
 
-[node name="PlayerRespawn" type="Node2D" parent="."]
+[node name="PlayerRespawn" type="Node2D" parent="Game"]
 position = Vector2(640, 360)
 
-[node name="PlayerSpawnArea" parent="PlayerRespawn" instance=ExtResource("6_4y3gx")]
+[node name="PlayerSpawnArea" parent="Game/PlayerRespawn" instance=ExtResource("6_4y3gx")]
 
-[node name="LaserSound" type="AudioStreamPlayer" parent="."]
+[node name="LaserSound" type="AudioStreamPlayer" parent="Game"]
 stream = ExtResource("7_pm824")
 
-[node name="AsteroidHit" type="AudioStreamPlayer" parent="."]
+[node name="AsteroidHit" type="AudioStreamPlayer" parent="Game"]
 stream = ExtResource("8_eseet")
 
-[node name="LoseSound" type="AudioStreamPlayer" parent="."]
+[node name="LoseSound" type="AudioStreamPlayer" parent="Game"]
 stream = ExtResource("9_gniy5")
 
-[node name="LiveSound" type="AudioStreamPlayer" parent="."]
+[node name="LiveSound" type="AudioStreamPlayer" parent="Game"]
 stream = ExtResource("10_wblcq")
 
-[node name="Timer" type="Timer" parent="."]
+[node name="Timer" type="Timer" parent="Game"]
 wait_time = 10.0
 autostart = true
 
-[connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]
+[connection signal="timeout" from="Game/Timer" to="Game" method="_on_timer_timeout"]
